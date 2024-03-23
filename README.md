@@ -36,7 +36,7 @@ source ./venv/Scripts/activate
 
 
 ```
-pip install -r requeriment.txt
+pip install -r requeriments.txt
 ```
 ```
 python main.py
