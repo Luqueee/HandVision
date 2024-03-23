@@ -8,31 +8,32 @@ import numpy as np
 
 
 def calcular_media(lista):
-    # Convertir la lista de diccionarios a un arreglo de NumPy
-    np_lista = np.array([list(diccionario.values()) for diccionario in lista])
+    try:
+        # Convertir la lista de diccionarios a un arreglo de NumPy
+        np_lista = np.array([list(diccionario.values()) for diccionario in lista])
 
-    # Calcular la suma de cada columna
-    suma_columnas = np.sum(np_lista, axis=0)
+        # Calcular la suma de cada columna
+        suma_columnas = np.sum(np_lista, axis=0)
 
-    # Calcular el número de elementos en la lista
-    cantidad_elementos = len(lista)
+        # Calcular el número de elementos en la lista
+        cantidad_elementos = len(lista)
 
-    # Calcular la media de cada columna
-    media = np.round(suma_columnas / cantidad_elementos, 0)
+        # Calcular la media de cada columna
+        media = np.round(suma_columnas / cantidad_elementos, 0)
 
-    # Crear un diccionario con los resultados
-    resultados = {
-        "dedo1": media[0].tolist(),
-        "dedo2": media[1].tolist(),
-        "dedo3": media[2].tolist(),
-        "dedo4": media[3].tolist(),
-        "r1": media[4].tolist(),
-        "r2": media[5].tolist()
-    }
-    
+        # Crear un diccionario con los resultados
+        resultados = {
+            "dedo1": media[0].tolist(),
+            "dedo2": media[1].tolist(),
+            "dedo3": media[2].tolist(),
+            "dedo4": media[3].tolist(),
+            "r1": media[4].tolist(),
+            "r2": media[5].tolist()
+        }
 
-
-    return resultados
+        return resultados
+    except:
+        return {}
 
 def main():
     # Inicializar variables
@@ -47,7 +48,7 @@ def main():
         canvas = np.zeros((480, 1200, 3), dtype='uint8')
         
         try:
-            with open("data/positions.json", encoding="UTF-8") as file:
+            with open("app/data/positions.json", encoding="UTF-8") as file:
                 positions = json.load(file)
             
             positions = calcular_media(positions)
@@ -73,12 +74,12 @@ def main():
             straight = angleHand < MIN_ANGLE_HAND
 
             # Escribir resultados en archivo
-            with open("data/commands.json", "w", encoding="UTF-8") as file:
+            with open("app/data/commands.json", "w", encoding="UTF-8") as file:
                 json.dump({
-                    'scroll': [scroll,dedoX2,dedoX3],
-                    'drag': [drag,dragDist],
-                    'click': click,
-                    'straight': straight
+                    'scroll': [scroll,dedoX2,dedoY2],
+                    'drag': [drag,dedoX3,dedoY3],
+                    'click': [click],
+                    'straight': [straight]
                 }, file, indent=4)
 
             frames += 1
@@ -119,3 +120,75 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+    #print()
+
+    '''       
+
+    if dedoDist <= MAX_DISTANCE_dedo_VALUE and dedoDist >= MIN_DISTANCE_dedo_VALUE:
+        if DistD2D3 > 20:
+            if not dedo:
+                
+                last_distancededoY = dedoMediaY
+                last_distancededoX = dedoMediaX
+                dedo = True
+            else:
+                
+                #print('distancia: ',dedoDist, dedo)
+                
+                dist_dedo = (dedoMediaY-last_distancededoY)/FUERZA_dedo
+                #print('distance dedo: ',dist_dedo)
+                
+                if abs(dist_dedo) >= MIN_VALUE:
+                    pyautogui.scroll(round(dist_dedo))
+                
+                #print('last distance: x: ',last_distancededoX, 'y: ',last_distancededoY, ' | ','distance: x: ',dedoMediaX, 'y: ',dedoMediaY)
+                
+                cv2.line(image, (int(last_distancededoX),int(last_distancededoY)), (int(dedoMediaX),int(dedoMediaY)), WHITE2, GLINEAS )
+    else:
+        dedo = False
+    """
+    if mouseDist <= MAX_DISTANCE_MOUSE_VALUE and mouseDist > MIN_DISTANCE_MOUSE_VALUE:
+        
+        await mouse(mouseMediaX, mouseMediaY, w, h)
+        
+        
+        last_distanceDragX = mouseMediaX
+        last_distanceDragY = mouseMediaY
+        print(last_distanceDragY,last_distanceDragX)
+    """
+
+    if dragDist <= MAX_DISTANCE_DRAG_VALUE and dragDist >= MIN_DISTANCE_DRAG_VALUE:
+        print("a")
+        if DistD1D3 > 20:
+            
+            if not drag:
+                last_distanceDragY = mouseMediaY
+                last_distanceDragX = mouseMediaX
+                drag = True
+                
+            else:
+                
+                #print('distancia: ',dedoDist, dedo)
+                
+                xx = (last_distanceDragX-mouseMediaX)/SENSIBILIDAD_MOUSE
+                yy = (last_distanceDragY-mouseMediaY)/SENSIBILIDAD_MOUSE
+                #print('distance dedo: ',dist_dedo)
+                print(last_distanceDragX,last_distanceDragY,xx,yy)
+                cv2.line(image, (int(last_distanceDragX),int(last_distanceDragY)), (int(xx),int(yy)), WHITE2, GLINEAS )
+
+                pyautogui.moveTo(xx,yy)
+                
+                
+    else:
+        drag = False'''
+        
+        
+        
+        
+        
